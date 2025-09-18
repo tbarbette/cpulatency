@@ -7,9 +7,9 @@ const CORES = 4;
 const CORE_SIZE = 200;
 const CPU_WIDTH = 800;
 const CPU_HEIGHT = 800;
-const CPU_MARGIN = 80;
+const CPU_MARGIN = 20;
 const LLC_RADIUS = 50;
-const RAM_WIDTH = 60;
+const RAM_WIDTH = 80;
 const RAM_HEIGHT = CPU_HEIGHT - 2 * CPU_MARGIN;
 const DOTS_PER_LEVEL = 1;
 
@@ -115,181 +115,239 @@ function MemoryAnimation() {
     <div className="memory-animation-container">
       <h2>Logical CPU Memory Access Animation</h2>
       <div className="slider-container">
-
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-          <span>Towards real speed</span>
-          <span>        <label htmlFor="speed">
-          Slowdown (/{speedScale})
-        </label>
-        <br />
-        <input
-          id="speed"
-          type="range"
-          min={Math.log10(MIN_SCALE)}
-          max={Math.log10(MAX_SCALE)}
-          step={1}
-          value={Math.log10(speedScale)}
-          onChange={(e) => setSpeedScale(Math.pow(10, Number(e.target.value)))}
-        /></span>
-          <span>Max slowdown (10ns = 1s)</span>
+          <span>Towards real speed (/1000)</span>
+          <span>
+            <label htmlFor="speed">Slowdown (/{speedScale})</label>
+            <br />
+            <input
+              id="speed"
+              type="range"
+              min={Math.log10(MIN_SCALE)}
+              max={Math.log10(MAX_SCALE)}
+              step={1}
+              value={Math.log10(speedScale)}
+              onChange={(e) => setSpeedScale(Math.pow(10, Number(e.target.value)))}
+            />
+          </span>
+          <span>Max slowdown (1ns = 1s)</span>
         </div>
       </div>
-      <svg width={CPU_WIDTH} height={CPU_HEIGHT}>
-        {/* CPU group rectangle */}
-        <rect
-          x={CPU_MARGIN}
-          y={CPU_MARGIN}
-          width={CPU_WIDTH - 2 * CPU_MARGIN}
-          height={CPU_HEIGHT - 2 * CPU_MARGIN}
-          rx={40}
-          fill={COLORS.CPU}
-          stroke="#bbb"
-          strokeWidth={3}
-          opacity={0.5}
-        />
-        <text
-          x={CPU_WIDTH / 2}
-          y={CPU_MARGIN + 32}
-          textAnchor="middle"
-          fontSize="32"
-          fill="#333"
-          fontWeight="bold"
-        >CPU</text>
-        {/* RAM */}
-        <rect
-          x={CPU_WIDTH - CPU_MARGIN + 10}
-          y={CPU_MARGIN}
-          width={RAM_WIDTH}
-          height={RAM_HEIGHT}
-          rx={12}
-          fill={COLORS.RAM}
-        />
-        <text 
-          x={CPU_WIDTH - CPU_MARGIN + 10 + RAM_WIDTH / 2} 
-          y={cpuCy} 
-          textAnchor="middle" 
-          fontSize="18" 
-          fill="#333"
-        >RAM</text>
-        {/* LLC (L3) center */}
-        <rect
-          x={llcX - LLC_RADIUS}
-          y={llcY - LLC_RADIUS}
-          width={LLC_RADIUS * 2}
-          height={LLC_RADIUS * 2}
-          rx={12}
-          fill={COLORS.L3}
-        />
-        <text
-          x={llcX}
-          y={llcY + LLC_RADIUS + 18}
-          textAnchor="middle"
-          fontSize="18"
-          fill="#333"
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          overflow: 'hidden',
+        }}
+      >
+        <svg
+          width="100%"
+          height="100%"
+          viewBox={`0 0 ${CPU_WIDTH + RAM_WIDTH + 10} ${CPU_HEIGHT}`}
+          preserveAspectRatio="xMidYMid meet"
         >
-          LLC (L3)
-        </text>
-        {/* Cores */}
-        {corePositions.map((core, i) => (
-          <CpuCore key={i} x={core.x} y={core.y} size={CORE_SIZE} coreIndex={i} />
-        ))}
-        {/* Animated dots */}
-        {dots.map((dot) => {
-          const core = corePositions[dot.core];
-          const padding = CORE_SIZE * 0.12;
-          const innerW = CORE_SIZE - 2 * padding;
-          const innerH = CORE_SIZE - 2 * padding;
-          let fromX, fromY, toX, toY;
+          {/* CPU group rectangle */}
+          <rect
+            x={CPU_MARGIN}
+            y={CPU_MARGIN}
+            width={CPU_WIDTH - 2 * CPU_MARGIN}
+            height={CPU_HEIGHT - 2 * CPU_MARGIN}
+            rx={40}
+            fill={COLORS.CPU}
+            stroke="#bbb"
+            strokeWidth={3}
+            opacity={0.5}
+          />
+          <text
+            x={CPU_WIDTH / 2}
+            y={CPU_MARGIN + 32}
+            textAnchor="middle"
+            fontSize="32"
+            fill="#333"
+            fontWeight="bold"
+          >
+            CPU
+          </text>
+          {/* RAM */}
+          <rect
+            x={CPU_WIDTH - CPU_MARGIN + 10}
+            y={CPU_MARGIN}
+            width={RAM_WIDTH}
+            height={RAM_HEIGHT}
+            rx={12}
+            fill={COLORS.RAM}
+          />
+          <text
+            x={CPU_WIDTH - CPU_MARGIN + 10 + RAM_WIDTH / 2}
+            y={cpuCy}
+            textAnchor="middle"
+            fontSize="18"
+            fill="#333"
+          >
+            RAM
+          </text>
+          {/* LLC (L3) center */}
+          <rect
+            x={llcX - LLC_RADIUS}
+            y={llcY - LLC_RADIUS}
+            width={LLC_RADIUS * 2}
+            height={LLC_RADIUS * 2}
+            rx={12}
+            fill={COLORS.L3}
+          />
+          <text
+            x={llcX}
+            y={llcY + LLC_RADIUS + 18}
+            textAnchor="middle"
+            fontSize="18"
+            fill="#333"
+          >
+            LLC (L3)
+          </text>
+          {/* Cores */}
+          {corePositions.map((core, i) => (
+            <CpuCore key={i} x={core.x} y={core.y} size={CORE_SIZE} coreIndex={i} />
+          ))}
+          {/* Animated dots */}
+          {dots.map((dot) => {
+            const core = corePositions[dot.core];
+            const padding = CORE_SIZE * 0.12;
+            const innerW = CORE_SIZE - 2 * padding;
+            const innerH = CORE_SIZE - 2 * padding;
+            let fromX, fromY, toX, toY;
 
-          if (dot.from === 'RAM') {
+            if (dot.from === 'RAM') {
+              const midProgress = latencies.L3 / latencies.RAM;
+              if (dot.progress >= midProgress) {
+                fromX = ramX;
+                fromY = ramY;
+                toX = llcX;
+                toY = llcY;
 
-            const midProgress = latencies.L3 / latencies.RAM;
-            console.log(dot.progress,midProgress);
-            if (dot.progress >= midProgress) {
-              fromX = ramX;
-              fromY = ramY;
-              toX = llcX;
-              toY = llcY;
-
-              const x = fromX + (toX - fromX) * (1 - (dot.progress - midProgress)/(1 - midProgress));
-              const y = fromY + (toY - fromY) * (1 - (dot.progress - midProgress)/(1 - midProgress));
-              return (
-                <circle
-                  key={dot.id}
-                  cx={x}
-                  cy={y}
-                  r={10}
-                  fill={COLORS.RAM}
-                  opacity={0.85}
-                />
-              );
-            } else {
+                const x =
+                  fromX +
+                  (toX - fromX) * (1 - (dot.progress - midProgress) / (1 - midProgress));
+                const y =
+                  fromY +
+                  (toY - fromY) * (1 - (dot.progress - midProgress) / (1 - midProgress));
+                return (
+                  <circle
+                    key={dot.id}
+                    cx={x}
+                    cy={y}
+                    r={10}
+                    fill={COLORS.RAM}
+                    opacity={0.85}
+                  />
+                );
+              } else {
+                fromX = llcX;
+                fromY = llcY;
+                const l1X = core.x - innerW / 4;
+                const l1Y = core.y - innerH / 4;
+                toX = l1X;
+                toY = l1Y + innerH * 0.5;
+                const x = fromX + (toX - fromX) * (1 - dot.progress / midProgress);
+                const y = fromY + (toY - fromY) * (1 - dot.progress / midProgress);
+                return (
+                  <circle
+                    key={dot.id}
+                    cx={x}
+                    cy={y}
+                    r={10}
+                    fill={COLORS.RAM}
+                    opacity={0.85}
+                  />
+                );
+              }
+            } else if (dot.from === 'L3') {
               fromX = llcX;
               fromY = llcY;
-              const l1X = core.x - innerW / 4;
-              const l1Y = core.y - innerH / 4;
-              toX = l1X;
-              toY = l1Y + innerH * 0.5;
-              const x = fromX + (toX - fromX) * (1 - dot.progress/midProgress);
-              const y = fromY + (toY - fromY) * (1 - dot.progress/midProgress);
-              return (
-                <circle
-                  key={dot.id}
-                  cx={x}
-                  cy={y}
-                  r={10}
-                  fill={COLORS.RAM}
-                  opacity={0.85}
-                />
-              );
+            } else if (dot.from === 'L2') {
+              fromX = core.x + innerW / 4;
+              fromY = core.y - innerH / 4;
+            } else if (dot.from === 'L1') {
+              fromX = core.x - innerW / 4;
+              fromY = core.y - innerH / 4;
             }
-          } else if (dot.from === 'L3') {
-            fromX = llcX;
-            fromY = llcY;
-          } else if (dot.from === 'L2') {
-            fromX = core.x + innerW / 4;
-            fromY = core.y - innerH / 4;
-          } else if (dot.from === 'L1') {
-            fromX = core.x - innerW / 4;
-            fromY = core.y - innerH / 4;
-          }
-          // Register aligned below L1
-          const l1X = core.x - innerW / 4;
-          const l1Y = core.y - innerH / 4;
-          toX = l1X;
-          toY = l1Y + innerH * 0.5;
-          const x = fromX + (toX - fromX) * dot.progress;
-          const y = fromY + (toY - fromY) * dot.progress;
-          return (
-            <circle
-              key={dot.id}
-              cx={x}
-              cy={y}
-              r={10}
-              fill={COLORS[dot.from] || '#333'}
-              opacity={0.85}
-            />
-          );
-        })}
-      </svg>
+            // Register aligned below L1
+            const l1X = core.x - innerW / 4;
+            const l1Y = core.y - innerH / 4;
+            toX = l1X;
+            toY = l1Y + innerH * 0.5;
+            const x = fromX + (toX - fromX) * dot.progress;
+            const y = fromY + (toY - fromY) * dot.progress;
+            return (
+              <circle
+                key={dot.id}
+                cx={x}
+                cy={y}
+                r={10}
+                fill={COLORS[dot.from] || '#333'}
+                opacity={0.85}
+              />
+            );
+          })}
+        </svg>
+      </div>
       <div className="legend">
-<div style={{ marginTop: 16 }}>
-  <strong>Latencies (ns):</strong>
-  {Object.keys(latencies).map((key) => (
-    <div key={key} style={{ margin: 4 , display: 'inline-block', marginRight: 12 }}>
-      <label htmlFor={`latency-${key}`}>{key}: </label>
-      <input
-        id={`latency-${key}`}
-        type="number"
-        min={1}
-        value={latencies[key]}
-        style={{ width: 60 }}
-        onChange={e => setLatencies(l => ({ ...l, [key]: parseInt(e.target.value, 10) || 1 }))}
-      />
-      ns
-    </div>
-  ))}
-</div>
+        <div style={{ marginTop: 16 }}>
+          <strong>Latencies (ns):</strong>
+          {Object.keys(latencies).map((key) => (
+            <div
+              key={key}
+              style={{ margin: 4, display: 'inline-block', marginRight: 12 }}
+            >
+              <label htmlFor={`latency-${key}`}>{key}: </label>
+              <input
+                id={`latency-${key}`}
+                type="number"
+                min={1}
+                value={latencies[key]}
+                style={{ width: 60 }}
+                onChange={(e) =>
+                  setLatencies((l) => ({
+                    ...l,
+                    [key]: parseInt(e.target.value, 10) || 1,
+                  }))
+                }
+              />
+              ns
+            </div>
+          ))}
+        </div>
+        <div
+          style={{
+            marginTop: 32,
+            fontSize: '1rem',
+            color: '#555',
+            background: '#f8f8f8',
+            borderRadius: 8,
+            padding: 16,
+          }}
+        >
+          This animation is an approximation and does not strictly respect the real memory
+          hierarchy.<br />
+          For example, L1 is often included in L2 so the trajectory should go through L2, and
+          the relationships between caches and RAM can vary depending on the architecture.<br />
+          Inspired by{' '}
+          <a
+            href="https://x.com/BenjDicken/status/1847310000735330344"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            BenjDicken's animation
+          </a>
+          .<br />
+          Author: Tom Barbette (
+          <a href="https://www.tombarbette.be" target="_blank" rel="noopener noreferrer">
+            tombarbette.be
+          </a>
+          )
+        </div>
       </div>
     </div>
   );
