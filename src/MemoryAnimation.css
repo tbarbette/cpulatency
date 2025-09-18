@@ -1,0 +1,26 @@
+
+.memory-animation-container {
+  margin: 2em auto;
+  max-width: 900px;
+  background: #f7f7fa;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px #0001;
+  padding: 2em;
+  text-align: center;
+}
+.slider-container {
+  margin-bottom: 1.5em;
+}
+svg {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 8px #0002;
+  width: 100%;
+  height: auto;
+  min-height: 500px;
+}
+.legend {
+  margin-top: 1em;
+  font-size: 1.1em;
+  color: #555;
+}
