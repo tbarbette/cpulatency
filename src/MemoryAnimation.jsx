@@ -113,7 +113,7 @@ function MemoryAnimation() {
 
   return (
     <div className="memory-animation-container">
-      <h2>Logical CPU Memory Access Animation</h2>
+      <h2>CPU Memory Access Animation</h2>
       <div className="slider-container">
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
           <span>Towards real speed (/1000)</span>
