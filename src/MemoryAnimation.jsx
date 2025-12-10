@@ -46,6 +46,9 @@ function getCorePositions() {
 
 
 function MemoryAnimation() {
+  const [isDark, setIsDark] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)').matches : false
+  );
   const [latencies, setLatencies] = useState(DEFAULT_LATENCIES);
   // scale: 1 = real speed, 1_000_000_000 = 1ns = 1s
   const MAX_SCALE = 1_000_000_000;
@@ -111,9 +114,20 @@ function MemoryAnimation() {
   const ramX = CPU_WIDTH - CPU_MARGIN + RAM_WIDTH / 2 + 10;
   const ramY = cpuCy;
 
+  const textColor = isDark ? '#f5f5f5' : '#333';
+
   return (
-    <div className="memory-animation-container">
-      <h2>CPU Memory Access Animation</h2>
+    <div className={`memory-animation-container ${isDark ? 'dark' : ''}`}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+        <h2 style={{ margin: 0 }}>CPU Memory Access Latency Animation</h2>
+        <button
+          className="theme-toggle"
+          aria-label="Toggle theme"
+          onClick={() => setIsDark((d) => !d)}
+        >
+          {isDark ? '☾' : '☀︎'}
+        </button>
+      </div>
       <div className="slider-container">
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
           <span>Towards real speed (/1000)</span>
@@ -166,7 +180,7 @@ function MemoryAnimation() {
             y={CPU_MARGIN + 32}
             textAnchor="middle"
             fontSize="32"
-            fill="#333"
+            fill={textColor}
             fontWeight="bold"
           >
             CPU
@@ -185,7 +199,7 @@ function MemoryAnimation() {
             y={cpuCy}
             textAnchor="middle"
             fontSize="18"
-            fill="#333"
+            fill={textColor}
           >
             RAM
           </text>
@@ -203,7 +217,7 @@ function MemoryAnimation() {
             y={llcY + LLC_RADIUS + 18}
             textAnchor="middle"
             fontSize="18"
-            fill="#333"
+            fill={textColor}
           >
             LLC (L3)
           </text>

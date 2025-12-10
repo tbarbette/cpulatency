@@ -8,6 +8,13 @@
   padding: 2em;
   text-align: center;
 }
+
+.memory-animation-container.dark {
+  background: #121212;
+  color: #f5f5f5;
+  box-shadow: 0 2px 16px #0006;
+}
+
 .slider-container {
   margin-bottom: 1.5em;
 }
@@ -19,8 +26,43 @@ svg {
   height: auto;
   min-height: 500px;
 }
+
+.memory-animation-container.dark svg {
+  background: #1e1e1e;
+  box-shadow: 0 1px 8px #0006;
+}
+
 .legend {
   margin-top: 1em;
   font-size: 1.1em;
   color: #555;
+}
+
+.memory-animation-container.dark .legend {
+  color: #ddd;
+}
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: linear-gradient(135deg, #fff, #eaeaea);
+  color: #333;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px #0002;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  box-shadow: 0 2px 8px #0003;
+  transform: translateY(-1px);
+}
+
+.memory-animation-container.dark .theme-toggle {
+  border: 1px solid #444;
+  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+  color: #f5f5f5;
+  box-shadow: 0 1px 4px #0006;
 }

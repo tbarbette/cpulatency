@@ -1,7 +1,7 @@
 
 
 
-# CPU Memory Access Animation
+# CPU Memory Access Latency Animation
 
 This React + Vite project displays an animation illustrating the movement of dots representing memory accesses between different levels (L1, L2, L3, RAM) and the register of a CPU. The speed of the dots is proportional to the real access time of each memory level and can be adjusted via a slider. The latency of the components is programmable too.
 
